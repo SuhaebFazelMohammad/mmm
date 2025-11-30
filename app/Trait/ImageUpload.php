@@ -48,4 +48,10 @@ trait ImageUpload {
         // Upload new image
         return $this->uploadImage($request, $field, $folder);
     }
+    public function deleteImage($path)
+    {
+        if (Storage::disk('public')->exists($path)) {
+            Storage::disk('public')->delete($path);
+        }
+    }
 }

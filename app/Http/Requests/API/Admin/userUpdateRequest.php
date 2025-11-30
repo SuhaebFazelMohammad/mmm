@@ -31,8 +31,7 @@ class userUpdateRequest extends FormRequest
             'profile_image' => 'nullable|image|mimes:jpeg,png,jpg,svg|max:2048',
             'tags' => 'required|array',
             'tags.*' => 'exists:tags,id',
-            'role' => 'required|string|in:admin,user',
-            'is_deleted' => 'required|boolean',
+            'password' => 'nullable|confirmed|string|min:8',
         ];
     }
 }

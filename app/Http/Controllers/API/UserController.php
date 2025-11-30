@@ -97,6 +97,14 @@ class UserController extends Controller
             $formattedTags
         );
     }
+    public function getTags()
+    {
+        $tags = Tag::query()->select('id', 'tag')->get();
+        return $this->success(
+            'Tags fetched successfully',
+            $tags
+        );
+    }
 
     public function show($id)
     {
@@ -150,4 +158,5 @@ class UserController extends Controller
             UserButtonResource::collection(new CollectionResource($buttonLinks))
         );
     }
+
 }

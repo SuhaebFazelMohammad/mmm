@@ -8,10 +8,12 @@ use App\Http\Requests\API\Admin\userUpdateRequest;
 use App\Http\Resources\Admin\UserResource; 
 use App\Http\Resources\CollectionResource;
 use App\Models\User;
+use App\Trait\ImageUpload;
 use Illuminate\Http\Request;
 
 class UserController extends Controller
 {
+    use ImageUpload;
     public function index(Request $request)
     {
         $query = User::query();
@@ -39,6 +41,17 @@ class UserController extends Controller
             new UserResource($user)
         );
     }
+    public function edit($id)
+    {
+        $user = User::findOrFail($id);
+        if(!$user){
+            return $this->error('User not found', 404);
+        }
+        return $this->success(
+            'User fetched successfully', 
+            new UserResource($user)
+        );
+    }
     public function update(userUpdateRequest $request, $id)
     {
         $user = User::findOrFail($id);
@@ -46,6 +59,9 @@ class UserController extends Controller
             return $this->error('User not found', 404);
         }
         $user->update($request->validated());
+        $user->tags()->sync($request->validated()['tags']);
+        $user->profile_image = $this->updateImage($request, 'profile_image', 'users', $user->profile_image);
+        $user->save();
         return $this->success(
             'User updated successfully', 
             new UserResource($user)
@@ -57,6 +73,8 @@ class UserController extends Controller
         if(!$user){
             return $this->error('User not found', 404);
         }
+        $this->deleteImage($user->profile_image);
+        $user->save();
         $user->delete();
         return $this->success(
             'User deleted successfully', 

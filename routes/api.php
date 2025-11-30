@@ -16,6 +16,7 @@ Route::controller(AuthController::class)->group(function () {
 Route::controller(UserController::class)->group(function () {
     Route::get('/users', 'index');
     Route::get('/users/{id}', 'show');
+    Route::get('/tags', 'getTags');
     Route::get('/user/{id}/button-links', 'getButtonLinks');
 });
 
